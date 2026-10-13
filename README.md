@@ -11,37 +11,11 @@ escalation) without reimplementing any of it.
 It is useful anywhere the browser isn't: a serial console, SSH without port forwarding,
 or a host where opening :9090 isn't allowed.
 
-The Overview page on a 120-column terminal (cut short at the right; in colour each panel
-has a shadow in the blank column beside it and half the row below it):
+![The Overview page: host, health, usage, system information and configuration panels beside the page menu](docs/images/overview.png)
 
-```
- server-box
- ┌───────────────────────────────────────────────────┤ Overview ├─────────────────────────
- │┌─┤ Pages ├────┐ ┌─┤ Host ├─────────────────────────────────────────────────────────────
- ││›1 Overview   │ │Server Box (server-box)
- ││ 2 Logs       │ │Red Hat Enterprise Linux 9.8 (Plow)
- ││ 3 Storage    │ │! Limited access: press A to turn on administrative access.
- ││ 4 Networking │ └──────────────────────────────────────────────────────────────────────
- ││ 5 Containers │
- ││ 6 Accounts   │ ┌─┤ Health ├───────────────────────────────────┐ ┌─┤ Usage ├───────────
- ││ 7 Services   │ │  ✓ No failed services                        │ │  CPU      [█░░░░░░░░
- ││ 8 Terminal   │ │                                              │ │  Memory   [██░░░░░░░
- ││ 9 Colours    │ │                                              │ │  Swap     [█░░░░░░░░
- ││              │ │                                              │ │  Disk     read     0
- ││              │ │                                              │ │  Network  in   8.34
- ││              │ └──────────────────────────────────────────────┘ └─────────────────────
- ││              │
- ││              │ ┌─┤ System information ├───────────────────────┐ ┌─┤ Configuration ├───
- ││              │ │  Vendor        Micro-Star International Co.,…│ │› Host name    Server
- ││              │ │  Model         MS-7C95                       │ │  System time  2026-1
- ││              │ │  Asset tag     requires administrative access│ │  Time zone    Americ
- ││              │ │  Machine ID    a263b903410b43be864258e732080…│ │  NTP          ✓ on,
- ││              │ │  Kernel        5.14.0-687.49.1.el9_8.x86_64  │ │
- ││              │ │  Architecture  x86_64                        │ │
- ││              │ └──────────────────────────────────────────────┘ └─────────────────────
- └────────────────────────────────────────────────────────────────────────────────────────
-
-```
+The Overview page on a 120×36 terminal. This and the screenshots under [The pages](#the-pages) were
+taken against the mock bridge in `test/mock-bridge/`, using the scenarios the page tests use, so the
+host, its disks, interfaces and containers are made up.
 
 ## Status
 
@@ -140,6 +114,8 @@ page by page; day and reboot separators; repeats collapsed. `Enter` shows every 
 an entry; from there `o` opens its unit on Services. `!` shows the equivalent
 `journalctl` command line.
 
+![The Logs page: the journal filtered to errors, newest first, with a day separator and a repeat count](docs/images/logs.png)
+
 **Storage** — the host's storage as UDisks2 sees it, as a tree: drives with their
 partitions, encrypted (LUKS) devices with what is inside once unlocked, LVM2 volume
 groups with their logical volumes; for each, what is on it, where it is mounted, its
@@ -161,6 +137,8 @@ cannot be locked or formatted until that is undone, and the page says what is in
 Locking and unlocking do not change `/etc/crypttab`. It needs the `udisks2` package on
 the managed host.
 
+![The Storage page: read and write plots above a panel per drive, with partitions, encrypted devices and usage bars](docs/images/storage.png)
+
 **Networking** — the network interfaces NetworkManager looks after (and, marked, the
 ones it does not), each with its addresses, what it sends and receives, and its state;
 above them Cockpit's two plots, **Sending** and **Receiving**, in bits per second, and
@@ -173,6 +151,8 @@ done as Cockpit does it, under a NetworkManager checkpoint: if the switch cuts o
 very connection cockpit-tui runs over, nobody confirms it, and NetworkManager undoes
 it by itself after seven seconds -- the page then says so, and offers to make the
 change anyway, without that safety net. It needs NetworkManager on the managed host.
+
+![The Networking page: sending and receiving plots, the firewall's zones and the interface list](docs/images/networking.png)
 
 `f` opens the **firewall's rules**: each active zone with its interfaces, the services
 it lets in with their TCP and UDP ports, and any single ports opened in it. `a` adds
@@ -198,10 +178,14 @@ question says first -- and `d` on an image deletes it, never by force. Every act
 asks first. The lists follow podman's own events. It needs podman's API service
 (`podman.socket`), which is started if it is not running, as the web console does.
 
+![The Containers page: podman containers with state, CPU, memory and published ports](docs/images/containers.png)
+
 **Accounts** — the accounts and groups on the host, with logged-in state, admin role,
 lock state and last login. Create and delete accounts, set passwords, lock and unlock,
 force a password change, grant or revoke the admin role, edit group membership, end
 sessions, and manage authorized SSH keys. Groups can be created, renamed and removed.
+
+![The Accounts page: accounts with full name, UID, admin role, lock state, last login and groups](docs/images/accounts.png)
 
 **Services** — systemd units by type (services, targets, sockets, timers, paths), for
 the system or your user manager (`o` switches), kept live from systemd's signals:
@@ -210,6 +194,8 @@ Details show status, relationships (`g`) and the unit's recent log lines (`l` op
 them on Logs); `s`/`S`/`r`/`R` start, stop, restart and reload, `e`/`d` enable and
 disable, `m`/`u` mask and unmask, `x` clears a failed state. Every action asks first and
 reports systemd's job result.
+
+![The Services page: service units with a failed one first, and tabs for targets, sockets, timers and paths](docs/images/services.png)
 
 **Terminal** — a shell on the managed host, in a window of the page: the header, the
 page menu and the help line stay where they are. `Enter` starts it, and puts the
@@ -224,6 +210,8 @@ addressing work; `TERM` is `xterm-256color`. Because Ink has parsed every key be
 the shell gets it, modifiers on arrows and the function keys do not reach it, and
 neither does the mouse.
 
+![The Terminal page: a shell running inside the page's window](docs/images/terminal.png)
+
 **Colours** — cockpit-tui's own page, not one of Cockpit's: the colour schemes, and
 making your own. `←`/`→` go through the schemes, using each as it is shown. The
 built-in ones cannot be changed; `n` makes a copy that can, under a name you give it
@@ -236,6 +224,8 @@ the settings file, so there is nothing to save and nothing to lose. `r` renames 
 scheme of yours and `d` deletes it. The page warns when a text colour is the very
 colour it is painted on. A scheme of your own is one set of colours for every
 terminal: on one with sixteen colours a shade is shown as the nearest of those.
+
+![The Colours page: the Dark scheme and its colours](docs/images/colours.png)
 
 ### Administrative access
 
