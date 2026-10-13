@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "baseUrl": "."
+  },
+  "//": "vendor/ is deliberately not typechecked -- it is unmodified upstream browser code. Its shape is declared in src/types/vendor.d.ts, and its runtime resolution is handled by the vitest alias and esbuild nodePaths.",
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist"]
+}

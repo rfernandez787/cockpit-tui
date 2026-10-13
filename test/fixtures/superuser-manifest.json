@@ -1,0 +1,11 @@
+{
+  "name": "tui-superuser",
+  "bridges": [
+    {
+      "label": "sudo",
+      "privileged": true,
+      "spawn": ["sudo", "-k", "-A", "/usr/bin/cockpit-bridge", "--privileged"],
+      "environ": ["SUDO_ASKPASS=${libexecdir}/cockpit-askpass"]
+    }
+  ]
+}

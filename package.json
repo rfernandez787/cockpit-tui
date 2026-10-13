@@ -1,0 +1,38 @@
+{
+  "name": "cockpit-tui",
+  "version": "0.1.0",
+  "description": "A terminal frontend for Cockpit, speaking the cockpit-bridge channel protocol",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "cockpit-tui": "./dist/cli.js"
+  },
+  "scripts": {
+    "dev": "node build.js --run --",
+    "build": "node build.js",
+    "watch": "node build.js --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xterm/headless": "^6.0.0",
+    "chalk": "^5.6.2",
+    "ink": "^7.1.1",
+    "react": "^19.2.0",
+    "string-width": "^8.3.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/ws": "^8.5.13",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
