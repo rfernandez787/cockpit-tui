@@ -529,7 +529,7 @@ Things that cost time to discover, recorded so they cost it once:
 
 ## License
 
-**GPL-3.0-or-later.**
+**GPL-3.0-or-later.** The full text is in [LICENSE](LICENSE).
 
 This is not a preference. `pkg/lib/cockpit.js` is LGPL-2.1-or-later, but its mandatory
 import closure includes `cockpit/event.ts`, `cockpit/fsinfo.ts`,
